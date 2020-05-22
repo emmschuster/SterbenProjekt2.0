@@ -27,14 +27,15 @@ public class Main extends Application {
     public int toteFrauen = 0;
     public int toteMaenner = 0;
 
-    public void ausfuerenIrgendwas() {
+    public void ausfueren() {
         try {
+            //Class.forName("org.sqlite.JDBC");
             Statement stmt = c.createStatement();
-            try (ResultSet rs0 = stmt.executeQuery("select from mytable;")) {
+            try (ResultSet rs0 = stmt.executeQuery("select * from mytable;")) {
                 while (rs0.next()) {
                     tote = rs0.getInt("DEATHS_TOTAL");
-                    toteFrauen += rs0.getInt("DEATHS_FEMALE");
-                    toteMaenner += rs0.getInt("DEATHS_MALE");
+                    toteFrauen = rs0.getInt("DEATHS_FEMALE");
+                    toteMaenner = rs0.getInt("DEATHS_MALE");
                 }
             }
 
@@ -48,23 +49,24 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            c=DriverManager.getConnection("jdbc:sqlite:C:/sqlite/SterbenMitCoronaZahlen.db");
+            c=DriverManager.getConnection("jdbc:sqlite:C:\\sqlite\\SterbenDatenbankFertig.db");
             //System.out.println("erfolgreich verbindetet");
-            ausfuerenIrgendwas();
+            ausfueren();
         } catch (SQLException e) {
             //System.out.println("weinen");
             e.printStackTrace();
         }
         StackPane root = new StackPane();
         ObservableList<PieChart.Data> valueList = FXCollections.observableArrayList(
-                new PieChart.Data("Frauen", tote),
-                new PieChart.Data("Maenner", 33));
-        // create a pieChart with valueList data.
+                new PieChart.Data("Frauen", toteFrauen),
+                new PieChart.Data("Maenner", toteMaenner));
         PieChart pieChart = new PieChart(valueList);
-        pieChart.setTitle("Sterberate von Maenner und Frauen in Niederösterreich 2018");
-        //adding pieChart to the root.
+        pieChart.setTitle("Sterberate von Männer und Frauen in Niederösterreich 2018\nFrauen: "+toteFrauen+"\nMänner: "+toteMaenner);
         root.getChildren().addAll(pieChart);
         Scene scene = new Scene(root, 1000, 1000);
+
+        //PieChart pieChart2 = new PieChart(valueList);
+        //pieChart.setTitle("Corona Tote bis April 2020 Österreich");
 
         primaryStage.setTitle("Sterblichkeit");
         primaryStage.setScene(scene);
