@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
 public class Main extends Application {
 
     Connection c = null;
@@ -79,10 +78,10 @@ public class Main extends Application {
         }
 
         //Normales PiChart
-        piChartDiagramm(ps);
+        //piChartDiagramm(ps);
 
         //Balkendiamgramm mit St.Pölten männer vs frauen
-        //barChartDiagramm(ps);
+        barChartDiagramm(ps);
 
         primaryStage.show();
     }
@@ -98,13 +97,13 @@ public class Main extends Application {
         xAxe.setLabel("Geschlecht");
 
         //BarChart barChart= new BarChart(xAxe, yAxe);
-        final BarChart<String,Number> barChart = new BarChart<String,Number>(xAxe,yAxe);
-
+        final BarChart<String,Number> barChart;
+        barChart = new BarChart<String,Number>(xAxe,yAxe);
 
         XYChart.Series series = new XYChart.Series();
 
-        series.getData().add(new XYChart.Data(insMT, m));
-        series.getData().add(new XYChart.Data(insFt, f));
+        series.getData().add(new XYChart.Data(m, insMT));
+        series.getData().add(new XYChart.Data(f, insFt));
 
         Scene scene = new Scene(barChart, 1000, 1000);
         barChart.getData().addAll(series);
